@@ -1,15 +1,22 @@
 import { React } from "react";
 import { Row, Col, Button, Typography } from "antd";
-import firebase, { auth } from "../../firebase/config";
+import { auth } from "../../firebase/config";
+import { FacebookAuthProvider , signInWithPopup } from 'firebase/auth'
 
 const {Title} = Typography;
 
-const fbProvider = firebase.auth.FacebookAuthProvider()
+const fbProvider = new FacebookAuthProvider();
 
 export default function Login(){
-
+    
     const handleFbLogin = () => {
-        auth.signInWithPopup(fbProvider)
+        signInWithPopup(auth,fbProvider)
+        .then( (re) => {
+            console.log(re);
+        })
+        .catch( (error)=>{
+            console.log(error.message);
+        })
     }
 
     return (
