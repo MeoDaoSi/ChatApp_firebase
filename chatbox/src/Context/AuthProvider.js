@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { auth } from "../firebase/config";
 import { useNavigate } from 'react-router-dom';
 import { Spin } from 'antd';
@@ -10,23 +10,25 @@ export default function AuthProvider( {children} ) {
     const navigate = useNavigate();
     const [ isLoading, setIsLoading ] = useState(true);
 
-    React.useEffect( ()=> {
+    useEffect( ()=> {
         const unsubscibed = auth.onAuthStateChanged( (user) => {
             console.log({user});
             if (user) {
                 const { displayName, email, uid, photoURL } = user;
                 setUser({
                     displayName, email, uid, photoURL
-                })
+                });
                 setIsLoading(false);
                 navigate('/');
             }
-            navigate('/login');
-        })
+            else{
+                navigate('/login');
+            }
+        });
         return () => {
             unsubscibed();
         }
-    }, [navigate])
+    }, [])
 
 
     return (

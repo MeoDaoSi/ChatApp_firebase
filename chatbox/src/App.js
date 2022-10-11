@@ -6,14 +6,14 @@ import ChatRoom from './components/ChatRoom';
 import AuthProvider from './Context/AuthProvider';
 
 export default function App() {
-        return (
-        <AuthProvider>
-            <BrowserRouter>
+    return (
+        <BrowserRouter>
+            <AuthProvider>
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/" element={<ChatRoom />} />
                 </Routes>
-            </BrowserRouter>
-        </AuthProvider>
+            </AuthProvider>
+        </BrowserRouter>
     );
 }
