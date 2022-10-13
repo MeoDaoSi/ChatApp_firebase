@@ -11,7 +11,7 @@ export default function AuthProvider( {children} ) {
     const [ isLoading, setIsLoading ] = useState(true);
 
     useEffect( ()=> {
-        const unsubscibed = auth.onAuthStateChanged( (user) => {
+        auth.onAuthStateChanged( (user) => {
             console.log({user});
             if (user) {
                 const { displayName, email, uid, photoURL } = user;
@@ -23,16 +23,14 @@ export default function AuthProvider( {children} ) {
             }
             else{
                 navigate('/login');
+                setIsLoading(false);
             }
         });
-        return () => {
-            unsubscibed();
-        }
     }, [])
 
 
     return (
-        <AuthContext.Provider value={ { user }} >
+        <AuthContext.Provider value={{ user }} >
             { isLoading ? <Spin /> : children }
         </AuthContext.Provider>
     )
