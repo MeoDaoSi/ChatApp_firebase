@@ -1,18 +1,44 @@
 import { React } from "react";
 import { Row, Col, Button, Typography } from "antd";
-import { auth } from "../../firebase/config";
-import { FacebookAuthProvider , signInWithPopup } from 'firebase/auth'
+import { auth, db } from "../../firebase/config";
+import { FacebookAuthProvider , signInWithPopup, signInAnonymously, getAdditionalUserInfo  } from 'firebase/auth'
+import { collection, doc, setDoc, addDoc, getDocs } from "firebase/firestore";
+import { addDocument } from "../../firebase/services";
 
 const {Title} = Typography;
 
-const fbProvider = new FacebookAuthProvider();
 
 export default function Login(){
-    
     const handleFbLogin = () => {
+        const fbProvider = new FacebookAuthProvider();
         signInWithPopup(auth,fbProvider)
         .then( (re) => {
             console.log(re);
+            const details = getAdditionalUserInfo(re)
+            if(details.isNewUser){
+                addDocument('users', {
+                    displayName: re.user.displayName,
+                    email: re.user.email,
+                    photoURL: re.user.photoURL,
+                    uid: re.user.uid,
+                    providerId: re.user.providerId
+                })
+                    .then(()=>{
+                        console.log('success');
+                    })
+            }
+            // getDocs(result)
+            //     .then((snapshot) => {
+            //         let user = [];
+                    
+            //         snapshot.docs.forEach(doc => {
+            //             user.push({...doc.data(),id: doc.id})
+            //         })
+            //         console.log(user);
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     })
         })
         .catch( (error)=>{
             console.log(error.message);
